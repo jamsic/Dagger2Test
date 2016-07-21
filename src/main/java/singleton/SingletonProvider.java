@@ -14,6 +14,6 @@ import javax.inject.Singleton;
 public class SingletonProvider {
     @Provides
     @Singleton MySingleton provideSingleton() {
-        return new MySingleton();
+        return MySingleton.getInstance();
     }
 }

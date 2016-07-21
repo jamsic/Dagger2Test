@@ -1,5 +1,7 @@
 package singleton;
 
+import dagger.Lazy;
+
 import javax.inject.Inject;
 
 /**
@@ -8,14 +10,14 @@ import javax.inject.Inject;
  * @Singleton обязательно должен куда-то инжектиться, вот он и делает это сюда
  */
 public class SingletonMaker {
-    private static MySingleton mySingleton;
+    private static Lazy<MySingleton> mySingleton;
 
     @Inject
-    public SingletonMaker(MySingleton singleton) {
+    public SingletonMaker(Lazy<MySingleton> singleton) {
         this.mySingleton = singleton;
     }
 
     public static MySingleton getInstance() {
-        return mySingleton;
+        return mySingleton.get();
     }
 }

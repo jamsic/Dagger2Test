@@ -23,15 +23,6 @@ public class SingletonApp {
         // они одинаковы
         System.out.println("mySingleton.equals(mySingleton1): "
                 + mySingleton.equals(mySingleton1));
-        // создаем синглтон через конструктор
-        MySingleton mySingleton2 = new MySingleton();
-        // уже другой
-        System.out.println("mySingleton.equals(mySingleton2) (mySingleton2 через конструктор): "
-                + mySingleton.equals(mySingleton2));
-        MySingleton mySingleton3 = new MySingleton();
-        // и снова другой
-        System.out.println("mySingleton2.equals(mySingleton3) (mySingleton3 через конструктор): "
-                + mySingleton2.equals(mySingleton3));
         MySingleton mySingleton4 = single.maker().getInstance();
         System.out.println("mySingleton4.getSomeVariable() (mySingleton4 = single.maker().getInstance()): "
                 + mySingleton4.getSomeVariable());
@@ -40,7 +31,7 @@ public class SingletonApp {
         // у mySingleton4 var тоже поменялся!
         System.out.println("mySingleton4.getSomeVariable()" +
                 " (mySingleton.setSomeVariable(mySingleton4.getSomeVariable() + 1)): "
-                + mySingleton4.getSomeVariable());
+                + mySingleton4.getSomeVariable() + " " + mySingleton.getSomeVariable() + " " + mySingleton1.getSomeVariable());
 
         SomeClass someClass = new SomeClass();
         // внутри метода некоторого класса
@@ -52,9 +43,27 @@ public class SingletonApp {
         Single single1 = DaggerSingle.builder().build();
         System.out.println(single1.maker().getInstance().equals(single.maker().getInstance()));
         //*/
-        System.out.println(SingletonMaker.getInstance().getSomeVariable());
-        // его можно создавать как через single, так и через SingletonMaker.getInstance()
-        System.out.println(SingletonMaker.getInstance().equals(mySingleton));
+
+        SomeThread someThread = new SomeThread();
+        Thread thread = new Thread(someThread);
+        thread.start();
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                Random random = new Random();
+                int rand = random.nextInt(100);
+                sleep(rand);
+                if (rand < 50) {
+                    System.out.println("main " + SingletonMaker.getInstance().getSomeVariable());
+                } else {
+                    SingletonMaker.getInstance().setSomeVariable(rand);
+                    System.out.println("main set to " + rand);
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         // то есть MySingleton ведут себя, как много ссылок на один и тот же объект,если создавать через single.maker
         // или SingletonMaker.getInstance()
